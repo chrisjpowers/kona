@@ -1,7 +1,7 @@
 describe('kona.BindableCollectionView', function() {
   var data, view, callback;
   beforeEach(function() {
-    data = new kona.BindableCollection([1,2,3,4,5]);
+    data = new kona.BindableCollection(["a", "b", "c", "d", "e"]);
     view = new kona.BindableCollectionView(data, {limit: 2, offset: 2});
     callback = jasmine.createSpy("callback");
   });
@@ -11,7 +11,7 @@ describe('kona.BindableCollectionView', function() {
       spyOn(data, 'all').andCallThrough();
       view.all();
       view.all();
-      expect(view.all()).toEqual([3,4]);
+      expect(view.all()).toEqual(["c", "d"]);
       expect(data.all.callCount).toEqual(1);
     });
   });
@@ -36,8 +36,11 @@ describe('kona.BindableCollectionView', function() {
   });
 
   describe('binding to "added" data event', function() {
+    var removedCallback;
     beforeEach(function() {
       view.bind("added", callback);
+      removedCallback = jasmine.createSpy("removedCallback");
+      view.bind("removed", removedCallback);
       view.all();
     });
 
@@ -47,7 +50,7 @@ describe('kona.BindableCollectionView', function() {
       });
 
       it('updates the view', function() {
-        expect(view.all()).toEqual([3, "new"]);
+        expect(view.all()).toEqual(["c", "new"]);
       });
 
       it('fires the "added" event with item and local index', function() {
@@ -55,15 +58,43 @@ describe('kona.BindableCollectionView', function() {
         expect(callback.argsForCall[0][1]).toEqual("new");
         expect(callback.argsForCall[0][2]).toEqual(1);
       });
+
+      it('fires the "removed event with item popped off view and its local index', function() {
+        expect(removedCallback).toHaveBeenCalled();
+        expect(removedCallback.argsForCall[0][1]).toEqual("d");
+        expect(removedCallback.argsForCall[0][2]).toEqual(1);
+      });
     });
 
-    describe('outside the limited slice', function() {
+    describe('before the limited slice', function() {
+      beforeEach(function() {
+        data.insert("before", 0);
+      });
+
+      it('updates the view', function() {
+        expect(view.all()).toEqual(["b", "c"]);
+      });
+
+      it('fires the "added" event with item pushed onto view and local index', function() {
+        expect(callback).toHaveBeenCalled();
+        expect(callback.argsForCall[0][1]).toEqual("b");
+        expect(callback.argsForCall[0][2]).toEqual(0);
+      });
+
+      it('fires the "removed event with item popped off view and its local index', function() {
+        expect(removedCallback).toHaveBeenCalled();
+        expect(removedCallback.argsForCall[0][1]).toEqual("d");
+        expect(removedCallback.argsForCall[0][2]).toEqual(1);
+      });
+    });
+
+    describe('after the limited slice', function() {
       beforeEach(function() {
         data.insert("outside", 4);
       });
 
       it('does not update the view', function() {
-        expect(view.all()).toEqual([3,4]);
+        expect(view.all()).toEqual(["c", "d"]);
       });
 
       it('does not fire the "added" event', function() {
@@ -80,43 +111,52 @@ describe('kona.BindableCollectionView', function() {
 
     describe('inside limited slice', function() {
       beforeEach(function() {
-        data.remove(3); // 3 is the object being removed, not the index
+        data.remove("c");
       });
 
       it('updates the view', function() {
-        expect(view.all()).toEqual([4,5]);
+        expect(view.all()).toEqual(["d", "e"]);
       });
 
       it('fires the "removed" event with local index', function() {
         expect(callback).toHaveBeenCalled();
-        expect(callback.argsForCall[0][1]).toEqual(3); // obj
-        expect(callback.argsForCall[0][2]).toEqual(0); // local index
+        expect(callback.argsForCall[0][1]).toEqual("c");
+        expect(callback.argsForCall[0][2]).toEqual(0);
       });
     });
 
     describe('before limited slice', function() {
+      var addedCallback;
       beforeEach(function() {
-        data.remove(1); // 1 is the first object;
+        addedCallback = jasmine.createSpy("addedCallback");
+        view.bind("added", addedCallback);
+        data.remove("a");
       });
 
       it('updates the view', function() {
-        expect(view.all()).toEqual([4,5]);
+        expect(view.all()).toEqual(["d", "e"]);
       });
 
-      it('fires the "removed" event with negative local index', function() {
+      it('fires the "removed" event with item dropped from view and its index', function() {
         expect(callback).toHaveBeenCalled();
-        expect(callback.argsForCall[0][1]).toEqual(1); // obj
-        expect(callback.argsForCall[0][2]).toEqual(-2); // local index
+        expect(callback.argsForCall[0][1]).toEqual("c");
+        expect(callback.argsForCall[0][2]).toEqual(0);
+      });
+
+      it('fires the "added" event with item that drops into view and its index', function() {
+        expect(addedCallback).toHaveBeenCalled();
+        expect(addedCallback.argsForCall[0][1]).toEqual("e");
+        expect(addedCallback.argsForCall[0][2]).toEqual(1);
       });
     });
 
     describe('after limited slice', function() {
       beforeEach(function() {
-        data.remove(5); // after the slice
+        data.remove("e"); // after the slice
       });
 
       it('does not update the view', function() {
-        expect(view.all()).toEqual([3,4]);
+        expect(view.all()).toEqual(["c", "d"]);
       });
 
       it('does not fire the "removed" event', function() {

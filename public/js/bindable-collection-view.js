@@ -20,11 +20,19 @@ var kona = kona || {};
 
     onDataAdded: function onDataAdded(event, item, index) {
       var localIndex = index - this.offset;
-      if(this.collection && localIndex >= 0 && localIndex < this.limit) {
-        this.collection = this.collection.slice(0,localIndex)
-            .concat([item])
-            .concat(this.collection.slice(localIndex,this.limit - 1));
-        this.trigger("added", [item, localIndex]);
+      if(this.collection && localIndex < this.limit) {
+        var poppedItem = this.collection[this.limit - 1];
+        this.trigger("removed", [poppedItem, this.limit - 1]);
+        if(localIndex >= 0) {
+          this.collection = this.collection.slice(0,localIndex)
+              .concat([item])
+              .concat(this.collection.slice(localIndex,this.limit - 1));
+          this.trigger("added", [item, localIndex]);
+        } else {
+          this.collection = [this.data.itemAtIndex(this.offset)]
+                            .concat(this.collection.slice(0, this.limit - 1));
+          this.trigger("added", [this.collection[0], 0]);
+        }
       }
     },
 
@@ -32,11 +40,14 @@ var kona = kona || {};
       var fillInItem, 
           localIndex = index - this.offset;
       if(this.collection && localIndex < this.limit) {
+        var fallOffItem = this.collection[0];
         this.collection = this.collection.slice(0,localIndex).concat(this.collection.slice(localIndex + 1, this.collection.length));
+
+        this.trigger("removed", [fallOffItem, 0]);
         if(fillInItem = this.data.itemAtIndex(this.lastIndex())) {
           this.collection.push(fillInItem);
+          this.trigger("added", [fillInItem, this.limit - 1]);
         }
-        this.trigger("removed", [item, localIndex]);
       }
     },
 

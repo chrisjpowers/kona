@@ -63,8 +63,9 @@ describe('kona.BindableCollection', function() {
       expect(collection.all()).toEqual(["a", "b", "c"]);
     });
 
-    it('publishes the "added" event', function() {
+    it('publishes the "added" event with index', function() {
       expect(callback.argsForCall[0][1]).toEqual("c");
+      expect(callback.argsForCall[0][2]).toEqual(2);
     });
   });
 
@@ -96,6 +97,23 @@ describe('kona.BindableCollection', function() {
       it('does not publish the "removed" event', function() {
         expect(callback).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('#removeIndex', function() {
+    beforeEach(function() {
+      collection.bind("removed", callback);
+      collection.removeIndex(1);
+    });
+
+    it('removes the item at given index', function() {
+      expect(collection.all()).toEqual(['a']);
+    });
+
+    it('fires the removed event', function() {
+      expect(callback).toHaveBeenCalled();
+      expect(callback.argsForCall[0][1]).toEqual("b");
+      expect(callback.argsForCall[0][2]).toEqual(1);
     });
   });
 

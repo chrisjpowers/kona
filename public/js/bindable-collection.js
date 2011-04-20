@@ -22,7 +22,7 @@ var kona = kona || {};
 
     add: function add(item) {
       this.collection.push(item);
-      this.trigger("added", [item]);
+      this.trigger("added", [item, this.collection.length - 1]);
     },
 
     insert: function insert(item, index) {
@@ -33,9 +33,14 @@ var kona = kona || {};
     remove: function remove(item) {
       var index = _.indexOf(this.collection, item);
       if(index > -1) {
-        this.collection = this.collection.slice(0,index).concat(this.collection.slice(index + 1, this.collection.length));
-        this.trigger("removed", [item, index]);
+        this.removeIndex(index);
       }
+    },
+
+    removeIndex: function removeIndex(index) {
+      var item = this.collection[index];
+      this.collection = this.collection.slice(0,index).concat(this.collection.slice(index + 1, this.collection.length));
+      this.trigger("removed", [item, index]);
     },
 
     sort: function sort(sortFunc) {
