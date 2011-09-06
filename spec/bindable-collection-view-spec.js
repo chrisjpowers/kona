@@ -125,6 +125,22 @@ describe('kona.BindableCollectionView', function() {
       });
     });
 
+    describe('last index in limited slice', function() {
+      beforeEach(function() {
+        data.remove("d");
+      });
+
+      it('updates the view', function() {
+        expect(view.all()).toEqual(["c", "e"]);
+      });
+
+      it('fires the "removed" event with local index', function() {
+        expect(callback).toHaveBeenCalled();
+        expect(callback.argsForCall[0][1]).toEqual("d");
+        expect(callback.argsForCall[0][2]).toEqual(1);
+      });
+    });
+
     describe('before limited slice', function() {
       var addedCallback;
       beforeEach(function() {

@@ -5,12 +5,12 @@ var kona = kona || {};
     return item;
   }
 
-  kona.BindableCollection = Class.extend({
-    init: function init(arr) {
-      this.collection = arr || [];
-      this.notifier = $({});
-    },
+  kona.BindableCollection = function BindableCollection(arr) {
+    this.collection = arr || [];
+    this.notifier = $({});
+  };
 
+  kona.BindableCollection.prototype = {
     all: function all(options) {
       if(!options) {
         return this.collection;
@@ -60,5 +60,5 @@ var kona = kona || {};
     trigger: function trigger(eventName, args) {
       this.notifier.trigger(eventName, args);
     }
-  });
+  };
 })(jQuery);

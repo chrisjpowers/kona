@@ -1,27 +1,29 @@
 var kona = kona || {};
 
 (function($) {
-  kona.BindableObject = Class.extend({
-    init: function(origObj) {
-      this.notifier = $({});
-      this.data = {};
-      for(var key in origObj) {
-        this.add(key, origObj[key]); 
-      }
-    },
+  kona.BindableObject = function BindableObject(origObj) {
+    this.notifier = $({});
+    this.data = {};
+    this.properties = [];
+    for(var key in origObj) {
+      this.add(key, origObj[key]); 
+    }
+  };
 
-    add: function(key, origVal) {
+  kona.BindableObject.prototype = {
+    add: function(key, initVal) {
       this[key] = function(val) {
         if(val) {
           var orig = this.data[key];
           this.data[key] = val;
-          this.trigger("changed", [val, orig]);
+          this.trigger("changed", [key, val, orig]);
         } else {
           return this.data[key];
         }
       };
-      this[key](origVal);
-      this.trigger("added", [key, origVal]);
+      this.data[key] = initVal;
+      this.properties.push(key);
+      this.trigger("added", [key, initVal]);
     },
 
     remove: function(key) {
@@ -38,5 +40,5 @@ var kona = kona || {};
       this.notifier.trigger(eventName, args);
     }
 
-  });
+  };
 })(jQuery);

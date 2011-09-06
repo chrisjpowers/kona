@@ -16,6 +16,14 @@ describe('kona.BindableObject', function() {
     });
   });
 
+  describe('properties', function() {
+    it('returns the keys of all properties', function() {
+      expect(obj.properties).toEqual(["name"]);
+      obj.add("gender", "male");
+      expect(obj.properties).toEqual(["name", "gender"]);
+    });
+  });
+
   describe('add', function() {
     beforeEach(function() {
       obj.bind("added", callback);
@@ -57,8 +65,9 @@ describe('kona.BindableObject', function() {
 
     it('fires changed event with new and old values', function() {
       expect(callback).toHaveBeenCalled();
-      expect(callback.argsForCall[0][1]).toEqual("Joe");
-      expect(callback.argsForCall[0][2]).toEqual("Chris");
+      expect(callback.argsForCall[0][1]).toEqual("name");
+      expect(callback.argsForCall[0][2]).toEqual("Joe");
+      expect(callback.argsForCall[0][3]).toEqual("Chris");
     });
   });
 });

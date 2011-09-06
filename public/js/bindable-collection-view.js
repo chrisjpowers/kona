@@ -1,18 +1,18 @@
 var kona = kona || {};
 
 (function($) {
-  kona.BindableCollectionView = Class.extend({
-    init: function init(data, options) {
-      this.data = data;
-      options = options || {};
-      this.limit = options.limit;
-      this.offset = options.offset;
-      this.notifier = $({});
+  kona.BindableCollectionView = function BindableCollectionView(data, options) {
+    this.data = data;
+    options = options || {};
+    this.limit = options.limit;
+    this.offset = options.offset;
+    this.notifier = $({});
 
-      data.bind("added", _.bind(this.onDataAdded, this));
-      data.bind("removed", _.bind(this.onDataRemoved, this));
-    },
+    data.bind("added", _.bind(this.onDataAdded, this));
+    data.bind("removed", _.bind(this.onDataRemoved, this));
+  };
 
+  kona.BindableCollectionView.prototype = {
     all: function all() {
       this.collection = this.collection || this.data.all(this.query());
       return this.collection;
@@ -40,10 +40,11 @@ var kona = kona || {};
       var fillInItem, 
           localIndex = index - this.offset;
       if(this.collection && localIndex < this.limit) {
-        var fallOffItem = this.collection[0];
-        this.collection = this.collection.slice(0,localIndex).concat(this.collection.slice(localIndex + 1, this.collection.length));
+        var fallOffIndex = localIndex > 0 ? localIndex : 0;
+        var fallOffItem = this.collection[fallOffIndex];
+        this.collection = this.collection.slice(0,localIndex).concat(this.collection.slice(fallOffIndex + 1, this.collection.length));
 
-        this.trigger("removed", [fallOffItem, 0]);
+        this.trigger("removed", [fallOffItem, fallOffIndex]);
         if(fillInItem = this.data.itemAtIndex(this.lastIndex())) {
           this.collection.push(fillInItem);
           this.trigger("added", [fillInItem, this.limit - 1]);
@@ -69,5 +70,5 @@ var kona = kona || {};
     trigger: function trigger(eventName, args) {
       this.notifier.trigger(eventName, args);
     }
-  });
+  };
 })(jQuery);
