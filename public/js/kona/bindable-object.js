@@ -12,15 +12,26 @@ var kona = kona || {};
 
   kona.BindableObject.prototype = {
     add: function(key, initVal) {
-      this[key] = function(val) {
+      var obj = this;
+      var fun = function(val) {
         if(val) {
-          var orig = this.data[key];
-          this.data[key] = val;
-          this.trigger("changed", [key, val, orig]);
+          var orig = obj.data[key];
+          obj.data[key] = val;
+          obj.trigger("changed", [key, val, orig]);
         } else {
-          return this.data[key];
+          return obj.data[key];
         }
       };
+
+      fun.change = function(cb) {
+        obj.bind("changed", function(e, k, v, orig) {
+          if(k === key) {
+            cb(v, orig);
+          }
+        });
+      };
+
+      this[key] = fun;
       this.data[key] = initVal;
       this.properties.push(key);
       this.trigger("added", [key, initVal]);

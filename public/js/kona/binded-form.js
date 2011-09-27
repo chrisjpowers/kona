@@ -14,6 +14,13 @@
         }
       }
 
+      function onFieldChanged(e) {
+        var input = $(this),
+            name = input.attr("name"),
+            value = input.val();
+        obj[name](value);
+      }
+
       var $binded = this;
       $.each(obj.properties, function(i, key) {
         updateField($binded, key, obj[key]());
@@ -30,6 +37,13 @@
       obj.bind("removed", function(event, key) {
         updateField($binded, key, null);
       });
+
+      if($binded.is("form")) {
+        $binded.delegate(":input", "change", onFieldChanged);
+      }
+      else if($binded.is(":input")) {
+        $binded.change(onFieldChanged);
+      }
     }
   });
 })(jQuery);

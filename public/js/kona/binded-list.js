@@ -6,14 +6,19 @@
           tag = options.tag || "li",
           contentFunc = options.content || function(item) { return item; };
           
-      _.each(collection.all(), function(item) {
+      function buildNode(item) {
         var node = $("<" + tag + ">", {text: contentFunc(item)});
-        list.append(node);
+        node.data("boundObject", item);
+        return node;
+      }
+
+      _.each(collection.all(), function(item) {
+        list.append(buildNode(item));
       });
       
       collection.bind("added", function(event, item, index) {
         var lis = list.find(tag),
-            markup = $("<" + tag + ">", {text: contentFunc(item)});
+            markup = buildNode(item);
         if(index === lis.length) {
           list.append(markup);
         } else {
