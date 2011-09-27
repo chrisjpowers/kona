@@ -1,9 +1,8 @@
 (function($) {
   $.extend($.fn, {
     bindToObject: function(obj, options) {
-      options = options || {};
-
       function updateField(binded, key, val) {
+        val = val || null;
         if(binded.is("form")) {
           var input = binded.find("[name='" + key + "']");
           input.val(val);
@@ -18,25 +17,43 @@
         var input = $(this),
             name = input.attr("name"),
             value = input.val();
-        obj[name](value);
+        $binded.data("boundObject")[name](value);
+      }
+
+      function removeCurrentBindings() {
+        var oldObj = $binded.data("boundObject");
+        if(oldObj) {
+          oldObj.bind("changed", onObjectChanged);
+          oldObj.bind("added", onObjectChanged);
+          oldObj.bind("removed", onObjectChanged);
+        }
+
+        if($binded.is("form")) {
+          $binded.undelegate(":input", "change", onFieldChanged);
+        }
+        else if($binded.is(":input")) {
+          $binded.unbind("change", onFieldChanged);
+        }
+      }
+
+      function onObjectChanged(event, key, val) {
+        updateField($binded, key, val);
       }
 
       var $binded = this;
+      options = options || {};
+      
+      removeCurrentBindings();
+
+      $binded.data("boundObject", obj);
+
       $.each(obj.properties, function(i, key) {
         updateField($binded, key, obj[key]());
       });
 
-      obj.bind("changed", function(event, key, val) {
-        updateField($binded, key, val);
-      });
-
-      obj.bind("added", function(event, key, val) {
-        updateField($binded, key, val);
-      });
-
-      obj.bind("removed", function(event, key) {
-        updateField($binded, key, null);
-      });
+      obj.bind("changed", onObjectChanged);
+      obj.bind("added", onObjectChanged);
+      obj.bind("removed", onObjectChanged);
 
       if($binded.is("form")) {
         $binded.delegate(":input", "change", onFieldChanged);

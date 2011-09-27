@@ -9,6 +9,12 @@
       function buildNode(item) {
         var node = $("<" + tag + ">", {text: contentFunc(item)});
         node.data("boundObject", item);
+        if(item.bind) {
+          item.bind("changed", function() {
+            console.log("changed");
+            node.html(contentFunc(item));
+          });
+        }
         return node;
       }
 

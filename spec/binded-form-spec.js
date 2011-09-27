@@ -43,6 +43,20 @@ describe('binded objects', function() {
         expect(obj.name()).toEqual("Giuseppe");
       });
     });
+
+    describe('rebinding', function() {
+      var obj2;
+      beforeEach(function() {
+        obj2 = new kona.BindableObject({name: "Giuseppe", age: 89});
+        form.bindToObject(obj2);
+      });
+
+      it('unbinds old object when new one is binded', function() {
+        nameField.val("Jack").change();
+        expect(obj.name()).toEqual("Chris");
+        expect(obj2.name()).toEqual("Jack");
+      });
+    });
   });
 
   describe('binding input', function() {

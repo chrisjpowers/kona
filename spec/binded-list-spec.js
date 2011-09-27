@@ -43,6 +43,22 @@ describe('$.bindToCollection', function() {
         expect(liValues()).toEqual(["a", "c"]);
       });
     });
+
+    describe('updating data', function() {
+      var obj;
+      beforeEach(function() {
+        obj = new kona.BindableObject({name: "Chris", age: 30});
+        data = new kona.BindableCollection([obj]);
+        list = $("<ul>").bindToCollection(data, {
+          content: function(user) { return user.name; }
+        });
+      });
+
+      it("updates an li when object is changed", function() {
+        obj.name("Giuseppe");
+        expect(list.find("li").html()).toEqual("Giuseppe");
+      });
+    });
   });
 
   describe('binding to view with limit/offset', function() {
