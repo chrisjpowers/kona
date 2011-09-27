@@ -3,10 +3,8 @@ var kona = kona || {};
 (function($) {
   kona.BindableCollectionView = function BindableCollectionView(data, options) {
     this.data = data;
-    options = options || {};
-    this.limit = options.limit;
-    this.offset = options.offset || 0;
     this.notifier = $({});
+    this.update(options);
 
     data.bind("added", _.bind(this.onDataAdded, this));
     data.bind("removed", _.bind(this.onDataRemoved, this));
@@ -19,19 +17,28 @@ var kona = kona || {};
     },
 
     update: function update(newOptions) {
+      newOptions = newOptions || {};
+
       if(newOptions.limit) { 
         this.limit = newOptions.limit; 
       };
+
       if(newOptions.offset || newOptions.offset === 0) { 
         this.offset = newOptions.offset; 
+      }
+      else if(!this.offset) {
+        this.offset = 0;
       };
+
       this.clearCache();
       this.trigger("updated", newOptions);
     },
 
     clearCache: function clearCache() {
-      delete this.collection;
-      this.all(); // repopulate this.collection, would be better if lazy
+      if(this.collection) {
+        delete this.collection;
+        this.all(); // repopulate this.collection, would be better if lazy
+      }
     },
 
     onDataAdded: function onDataAdded(event, item, index) {
