@@ -102,6 +102,16 @@ describe('$.bindToCollection', function() {
         expect(liValues()).toEqual(["d", "e"]);
       });
     });
+
+    describe('with view updated', function() {
+      beforeEach(function() {
+        view.update({limit: 3, offset: 1});
+      });
+
+      it('should update the visible items', function() {
+        expect(liValues()).toEqual(["b", "c", "d"]);
+      });
+    });
   });
 
   describe('options', function() {

@@ -11,16 +11,18 @@
         node.data("boundObject", item);
         if(item.bind) {
           item.bind("changed", function() {
-            console.log("changed");
             node.html(contentFunc(item));
           });
         }
         return node;
       }
 
-      _.each(collection.all(), function(item) {
-        list.append(buildNode(item));
-      });
+      function renderList() {
+        list.empty();
+        _.each(collection.all(), function(item) {
+          list.append(buildNode(item));
+        });
+      }
       
       collection.bind("added", function(event, item, index) {
         var lis = list.find(tag),
@@ -36,6 +38,12 @@
       collection.bind("removed", function(event, item, index) {
         list.find(tag).eq(index).remove();
       });
+
+      collection.bind("updated", function(event, newOptions) {
+        renderList();
+      });
+
+      renderList();
 
       return list;
     }

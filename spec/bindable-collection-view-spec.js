@@ -28,10 +28,15 @@ describe('kona.BindableCollectionView', function() {
     });
 
 
-    it('has a offset option', function() {
+    it('has an offset option', function() {
       expect(view.offset).toEqual(3);
       view.offset = 4;
       expect(view.offset).toEqual(4);
+    });
+
+    it('defaults offset to 0', function() {
+      view = new kona.BindableCollectionView(data, {});
+      expect(view.offset).toEqual(0);
     });
   });
 
@@ -178,6 +183,37 @@ describe('kona.BindableCollectionView', function() {
       it('does not fire the "removed" event', function() {
         expect(callback).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('updating options', function() {
+    var updateCallback;
+    beforeEach(function() {
+      updateCallback = jasmine.createSpy("updateCallback");
+      view.bind("updated", updateCallback);
+    });
+
+    it('updates the limit', function() {
+      view.update({limit: 3});
+      expect(view.all()).toEqual(["c", "d", "e"]);
+    });
+
+    it('updates the offset', function() {
+      view.update({offset: 1});
+      expect(view.all()).toEqual(["b", "c"]);
+    });
+
+    it('fires the updated event', function() {
+      var opts = {limit: 3, offset: 1};
+      view.update(opts);
+      expect(updateCallback).toHaveBeenCalled();
+      expect(updateCallback.argsForCall[0][1]).toEqual(opts);
+    });
+
+    it('busts the all() cache', function() {
+      view.all();
+      view.update({offset: 1, limit: 3});
+      expect(view.all()).toEqual(["b", "c", "d"]);
     });
   });
 });

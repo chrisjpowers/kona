@@ -34,7 +34,7 @@ var kona = kona || {};
       var index = _.indexOf(this.collection, item);
       if(index > -1) {
         this.removeIndex(index);
-      }
+      } 
     },
 
     removeIndex: function removeIndex(index) {

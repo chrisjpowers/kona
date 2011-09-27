@@ -1,8 +1,10 @@
 $(function() {
   var todoList = $("#todo-list");
   var todoForm = $("#todo-form");
+  var deleteButton = $("#done-button");
 
-  //var selectedTodo = new kona.BindableObject({name: "New Todo", priority: "medium"});
+  var selectedTodo;
+
   var allTodos = new kona.BindableCollection([
     new kona.BindableObject({name: "Do the Wash", priority: "medium"}),
     new kona.BindableObject({name: "Walk the Dog", priority: "medium"}),
@@ -13,14 +15,18 @@ $(function() {
   
   todoList.bindToCollection(todoView, {
     content: function(todo) {
-      return todo.name;
+      return todo.name() + " (" + todo.priority() + ")";
     }
   });
 
-
   todoList.delegate("li", "click", function(e) {
-    var obj = $(this).data("boundObject");
-    console.log(obj);
-    todoForm.bindToObject(obj);
+    selectedTodo = $(this).data("boundObject");
+    todoForm.bindToObject(selectedTodo);
+  });
+
+  deleteButton.click(function(e) {
+    e.preventDefault();
+    allTodos.remove(selectedTodo);
+    todoForm.find(":input").val("");
   });
 });

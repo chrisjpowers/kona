@@ -5,7 +5,7 @@ var kona = kona || {};
     this.data = data;
     options = options || {};
     this.limit = options.limit;
-    this.offset = options.offset;
+    this.offset = options.offset || 0;
     this.notifier = $({});
 
     data.bind("added", _.bind(this.onDataAdded, this));
@@ -16,6 +16,22 @@ var kona = kona || {};
     all: function all() {
       this.collection = this.collection || this.data.all(this.query());
       return this.collection;
+    },
+
+    update: function update(newOptions) {
+      if(newOptions.limit) { 
+        this.limit = newOptions.limit; 
+      };
+      if(newOptions.offset || newOptions.offset === 0) { 
+        this.offset = newOptions.offset; 
+      };
+      this.clearCache();
+      this.trigger("updated", newOptions);
+    },
+
+    clearCache: function clearCache() {
+      delete this.collection;
+      this.all(); // repopulate this.collection, would be better if lazy
     },
 
     onDataAdded: function onDataAdded(event, item, index) {
