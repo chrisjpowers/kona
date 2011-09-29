@@ -2,6 +2,7 @@ $(function() {
   var todoList = $("#todo-list");
   var todoForm = $("#todo-form");
   var deleteButton = $("#done-button");
+  var pagination = $("#pagination");
 
   var selectedTodo;
 
@@ -9,6 +10,10 @@ $(function() {
     new kona.BindableObject({name: "Do the Wash", priority: "medium"}),
     new kona.BindableObject({name: "Walk the Dog", priority: "medium"}),
     new kona.BindableObject({name: "Work Out", priority: "low"}),
+    new kona.BindableObject({name: "Do Stuff", priority: "low"}),
+    new kona.BindableObject({name: "Work Out 2", priority: "low"}),
+    new kona.BindableObject({name: "Work Out 3", priority: "low"}),
+    new kona.BindableObject({name: "Work Out 4", priority: "low"}),
     new kona.BindableObject({name: "File Taxes", priority: "high"})
   ]);
   var todoView = new kona.BindableCollectionView(allTodos, {limit: 3});
@@ -29,4 +34,6 @@ $(function() {
     allTodos.remove(selectedTodo);
     todoForm.find(":input").val("");
   });
+
+  pagination.bindToViewAsPaginator(todoView);
 });
