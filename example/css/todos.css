@@ -1,0 +1,26 @@
+#pagination {
+  margin: 10px 0;
+}
+
+  #pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #08c;
+  }
+    
+    #pagination a:hover {
+      text-decoration: underline;
+    }
+
+  #pagination a.disabled {
+    color: #ccc;
+  }
+
+  #pagination a.selected {
+    color: red;
+  }
+
+    #pagination a.disabled:hover, #pagination a.selected:hover {
+      text-decoration: none;
+      cursor: default;
+    }
