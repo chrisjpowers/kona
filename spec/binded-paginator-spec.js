@@ -4,7 +4,7 @@ describe('$.fn.bindToViewAsPaginator', function() {
     data = new kona.BindableCollection(["a", "b", "c", "d", "e"]);
     view = new kona.BindableCollectionView(data, {limit: 2, page: 1});
     paginator = $("<div>");
-    paginator.bindToViewAsPaginator(view);
+    paginator.kona("paginator", view);
   });
 
   describe('building paginator', function() {

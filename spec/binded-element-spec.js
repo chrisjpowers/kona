@@ -2,14 +2,14 @@ describe('Binded elements', function() {
   var obj, el, obj2;
 
   beforeEach(function() {
-    obj = new kona.BindableObject({name: "Chris", kind: "user"});
+    obj = kona({name: "Chris", kind: "user"});
     el = $("<p>", {text: "Welcome to the site", id: "welcome"});
   });
 
   describe('binding a single property', function() {
     describe('with no translation function', function() {
       beforeEach(function() {
-        el.bindToProperty("html", obj.name);
+        el.kona("bind", "html", obj.name);
       });
 
       it('initially populates the property', function() {
@@ -24,7 +24,7 @@ describe('Binded elements', function() {
 
     describe('with translation function', function() {
       beforeEach(function() {
-        el.bindToProperty("html", obj.name, function(val) {
+        el.kona("bind", "html", obj.name, function(val) {
           return "Hello " + val + "!!!";
         });
       });
@@ -37,8 +37,8 @@ describe('Binded elements', function() {
 
   describe('binding many properties', function() {
     beforeEach(function() {
-      obj2 = new kona.BindableObject({code: "gibberish"});
-      el.bindToProperties({
+      obj2 = kona({code: "gibberish"});
+      el.kona("bind", {
         html: obj.name,
         id: obj2.code
       });

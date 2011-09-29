@@ -159,4 +159,21 @@ describe('kona.BindableCollection', function() {
       expect(collection.itemAtIndex(1)).toEqual("b");
     });
   });
+
+  describe('#view', function() {
+    var view;
+    beforeEach(function() {
+      view = collection.view({limit: 1, offset: 1});
+    });
+
+    it('returns a BindableCollectionView with given options', function() {
+      expect(view.all()).toEqual(["b"]);
+    });
+  });
+
+  describe('konaClass', function() {
+    it('returns "BindableCollection"', function() {
+      expect(collection.konaClass).toEqual("BindableCollection");
+    });
+  });
 });

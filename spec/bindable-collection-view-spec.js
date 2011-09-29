@@ -216,4 +216,10 @@ describe('kona.BindableCollectionView', function() {
       expect(view.all()).toEqual(["b", "c", "d"]);
     });
   });
+
+  describe('konaClass', function() {
+    it('returns "BindableCollection" (duck typed)', function() {
+      expect(view.konaClass).toEqual("BindableCollection");
+    });
+  });
 });

@@ -1,24 +1,22 @@
 $(function() {
-  var todoList = $("#todo-list");
-  var todoForm = $("#todo-form");
-  var deleteButton = $("#done-button");
-  var pagination = $("#pagination");
-
-  var selectedTodo;
-
-  var allTodos = new kona.BindableCollection([
-    new kona.BindableObject({name: "Do the Wash", priority: "medium"}),
-    new kona.BindableObject({name: "Walk the Dog", priority: "medium"}),
-    new kona.BindableObject({name: "Work Out", priority: "low"}),
-    new kona.BindableObject({name: "Do Stuff", priority: "low"}),
-    new kona.BindableObject({name: "Work Out 2", priority: "low"}),
-    new kona.BindableObject({name: "Work Out 3", priority: "low"}),
-    new kona.BindableObject({name: "Work Out 4", priority: "low"}),
-    new kona.BindableObject({name: "File Taxes", priority: "high"})
-  ]);
-  var todoView = new kona.BindableCollectionView(allTodos, {limit: 3});
+  var todoList = $("#todo-list"),
+      todoForm = $("#todo-form"),
+      deleteButton = $("#done-button"),
+      pagination = $("#pagination"),
+      selectedTodo,
+      allTodos = kona([
+        {name: "Do the Wash", priority: "medium"},
+        {name: "Walk the Dog", priority: "medium"},
+        {name: "Work Out", priority: "low"},
+        {name: "Do Stuff", priority: "low"},
+        {name: "Do Laundry", priority: "low"},
+        {name: "Feed the Cats", priority: "low"},
+        {name: "Book Travel Plans", priority: "low"},
+        {name: "File Taxes", priority: "high"}
+      ]),
+      todoView = allTodos.view({limit: 3});
   
-  todoList.bindToCollection(todoView, {
+  todoList.kona("bind", todoView, {
     content: function(todo) {
       return todo.name() + " (" + todo.priority() + ")";
     }
@@ -26,7 +24,7 @@ $(function() {
 
   todoList.delegate("li", "click", function(e) {
     selectedTodo = $(this).data("boundObject");
-    todoForm.bindToObject(selectedTodo);
+    todoForm.kona("bind", selectedTodo);
   });
 
   deleteButton.click(function(e) {
@@ -35,5 +33,5 @@ $(function() {
     todoForm.find(":input").val("");
   });
 
-  pagination.bindToViewAsPaginator(todoView);
+  pagination.kona("paginator", todoView);
 });

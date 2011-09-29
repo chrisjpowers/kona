@@ -1,7 +1,7 @@
 describe('kona.BindableObject', function() {
   var obj, callback;
   beforeEach(function() {
-    obj = new kona.BindableObject({name: "Chris"});
+    obj = kona({name: "Chris"});
     callback = jasmine.createSpy('callback');
   });
 
@@ -68,6 +68,12 @@ describe('kona.BindableObject', function() {
       expect(callback.argsForCall[0][1]).toEqual("name");
       expect(callback.argsForCall[0][2]).toEqual("Joe");
       expect(callback.argsForCall[0][3]).toEqual("Chris");
+    });
+  });
+
+  describe('konaClass', function() {
+    it('returns "BindableObject"', function() {
+      expect(obj.konaClass).toEqual("BindableObject");
     });
   });
 });

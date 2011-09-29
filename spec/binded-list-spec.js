@@ -1,4 +1,4 @@
-describe('$.bindToCollection', function() {
+describe('$.kona("bind") with collection', function() {
   var list, view, data;
  
   function liValues() {
@@ -10,8 +10,8 @@ describe('$.bindToCollection', function() {
 
   describe('binding to data', function() {
     beforeEach(function() {
-      data = new kona.BindableCollection(["a", "b", "c"]);
-      list = $("<ul>").bindToCollection(data);
+      data = kona(["a", "b", "c"]);
+      list = $("<ul>").kona("bind", data);
     });
     
     describe('initialization', function() {
@@ -47,9 +47,9 @@ describe('$.bindToCollection', function() {
     describe('updating data', function() {
       var obj;
       beforeEach(function() {
-        obj = new kona.BindableObject({name: "Chris", age: 30});
-        data = new kona.BindableCollection([obj]);
-        list = $("<ul>").bindToCollection(data, {
+        obj = kona({name: "Chris", age: 30});
+        data = kona([obj]);
+        list = $("<ul>").kona("bind", data, {
           content: function(user) { return user.name; }
         });
       });
@@ -63,9 +63,9 @@ describe('$.bindToCollection', function() {
 
   describe('binding to view with limit/offset', function() {
     beforeEach(function() {
-      data = new kona.BindableCollection(["a", "b", "c", "d", "e"]);
-      view = new kona.BindableCollectionView(data, {limit: 2, offset: 2});
-      list = $("<ul>").bindToCollection(view);
+      data = kona(["a", "b", "c", "d", "e"]);
+      view = kona(data, {limit: 2, offset: 2});
+      list = $("<ul>").kona("bind", view);
     });
 
     describe('initialization', function() {
@@ -116,8 +116,8 @@ describe('$.bindToCollection', function() {
 
   describe('options', function() {
     beforeEach(function() {
-      data = new kona.BindableCollection(["a", "b", "c", "d", "e"]);
-      list = $("<div>").bindToCollection(data, {
+      data = kona(["a", "b", "c", "d", "e"]);
+      list = $("<div>").kona("bind", data, {
         tag: "p",
         content: function(item) { return "hello " + item; }
       });
