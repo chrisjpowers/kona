@@ -24,3 +24,7 @@
       text-decoration: none;
       cursor: default;
     }
+
+#todo-list li {
+  cursor: pointer;
+}

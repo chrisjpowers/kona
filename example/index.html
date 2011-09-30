@@ -23,6 +23,7 @@
     <p id="pagination"></p>
 
     <form id="todo-form">
+      <h3>Edit Todo</h3>
       <div>
         <label>To Do</label><input type="text" name="name" />
       </div>
@@ -35,7 +36,19 @@
         </select>
       </div>
       <div>
-        <button id="done-button">Done, Remove From List</button>
+        <button id="done-button">Done</button>
+      </div>
+    </form>
+
+    <form id="settings-form">
+      <h3>Settings</h3>
+      <div>
+        <label>Done Button Text</label>
+        <input type="text" name="doneButtonText" />
+      </div>
+      <div>
+        <label>Todos Per Page</label>
+        <input type="text" name="todosPerPage" />
       </div>
     </form>
   </body>

@@ -2,8 +2,8 @@ describe('kona.BindableCollectionView pagination', function() {
   var data, view;
 
   beforeEach(function() {
-    data = new kona.BindableCollection(["a", "b", "c", "d", "e"]);
-    view = new kona.BindableCollectionView(data, {limit: 2, page: 2});
+    data = kona(["a", "b", "c", "d", "e"]);
+    view = kona(data, {limit: 2, page: 2});
   });
 
   describe('page option', function() {
@@ -31,7 +31,7 @@ describe('kona.BindableCollectionView pagination', function() {
 
   describe('nextPage', function() {
     beforeEach(function() {
-      view = new kona.BindableCollectionView(data, {limit: 2, page: 1});
+      view = kona(data, {limit: 2, page: 1});
     });
 
     it('updates the view to the new offset', function() {
@@ -68,7 +68,7 @@ describe('kona.BindableCollectionView pagination', function() {
 
   describe('previousPage', function() {
     beforeEach(function() {
-      view = new kona.BindableCollectionView(data, {limit: 2, page: 3});
+      view = kona(data, {limit: 2, page: 3});
     });
 
     it('changes view to previous page', function() {

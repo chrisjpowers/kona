@@ -1,8 +1,8 @@
-describe('$.fn.bindToViewAsPaginator', function() {
+describe('$.fn.kona("paginator")', function() {
   var paginator, data, view;
   beforeEach(function() {
-    data = new kona.BindableCollection(["a", "b", "c", "d", "e"]);
-    view = new kona.BindableCollectionView(data, {limit: 2, page: 1});
+    data = kona(["a", "b", "c", "d", "e"]);
+    view = kona(data, {limit: 2, page: 1});
     paginator = $("<div>");
     paginator.kona("paginator", view);
   });
@@ -130,6 +130,18 @@ describe('$.fn.bindToViewAsPaginator', function() {
 
     it('does not run gotoPage on view', function() {
       expect(view.gotoPage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('reacting to view options change', function() {
+    it('adds numbers when pages are added', function() {
+      view.update({limit: 1}); // 5 pages of 1 each
+      expect(paginator.find(".page").length).toEqual(5);
+    });
+
+    it('removes numbers when pages are removed', function() {
+      view.update({limit: 3}); // 2 pages of 3 each
+      expect(paginator.find(".page").length).toEqual(2);
     });
   });
 });
