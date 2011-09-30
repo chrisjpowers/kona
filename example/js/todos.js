@@ -3,7 +3,6 @@ $(function() {
       todoForm = $("#todo-form"),
       deleteButton = $("#done-button"),
       pagination = $("#pagination"),
-      selectedTodo,
       allTodos = kona([
         {name: "Do the Wash", priority: "medium"},
         {name: "Walk the Dog", priority: "medium"},
@@ -23,13 +22,14 @@ $(function() {
   });
 
   todoList.delegate("li", "click", function(e) {
-    selectedTodo = $(this).data("boundObject");
-    todoForm.kona("bind", selectedTodo);
+    var todo = $(this).kona("binded");
+    todoForm.kona("bind", todo);
   });
 
   deleteButton.click(function(e) {
     e.preventDefault();
-    allTodos.remove(selectedTodo);
+    var todo = todoForm.kona("binded");
+    allTodos.remove(todo);
     todoForm.find(":input").val("");
   });
 
