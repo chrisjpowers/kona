@@ -1,4 +1,4 @@
-= Kona - A JavaScript Binding Library
+# Kona - A JavaScript Binding Library
 
 _NOTE: Still early development, so this library will likely have breaking changes in the future._
 
@@ -8,7 +8,7 @@ data objects, plus the $.kona method for binding UI elements to these data objec
 
 For example usage, please see the example directory.
 
-=== Dependencies
+### Dependencies
 
 * jQuery
 * Underscore
