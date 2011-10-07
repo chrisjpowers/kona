@@ -9,6 +9,7 @@ describe('kona.BindableCollectionView', function() {
   describe('#all', function() {
     it('proxies and caches the data', function() {
       spyOn(data, 'all').andCallThrough();
+      view = new kona.BindableCollectionView(data, {limit: 2, offset: 2});
       view.all();
       view.all();
       expect(view.all()).toEqual(["c", "d"]);
@@ -94,7 +95,10 @@ describe('kona.BindableCollectionView', function() {
     });
 
     describe('after the limited slice', function() {
+      var addedToCollectionCallback;
       beforeEach(function() {
+        addedToCollectionCallback = jasmine.createSpy("addedToCollectionCallback");
+        view.bind("addedToCollection", addedToCollectionCallback);
         data.insert("outside", 4);
       });
 
@@ -105,13 +109,18 @@ describe('kona.BindableCollectionView', function() {
       it('does not fire the "added" event', function() {
         expect(callback).not.toHaveBeenCalled();
       });
+
+      it("fires the 'addedToCollection' event", function() {
+        expect(addedToCollectionCallback).toHaveBeenCalled();
+        expect(addedToCollectionCallback.argsForCall[0][1]).toEqual("outside");
+      });
     });
   });
 
   describe('binding to "removed" data event', function() {
     beforeEach(function() {
       view.bind("removed", callback);
-      view.all();
+      //view.all();
     });
 
     describe('inside limited slice', function() {
@@ -172,7 +181,10 @@ describe('kona.BindableCollectionView', function() {
     });
 
     describe('after limited slice', function() {
+      var removedFromCollectionCb;
       beforeEach(function() {
+        removedFromCollectionCb = jasmine.createSpy("removedFromCollectionCb");
+        view.bind("removedFromCollection", removedFromCollectionCb);
         data.remove("e"); // after the slice
       });
 
@@ -182,6 +194,11 @@ describe('kona.BindableCollectionView', function() {
 
       it('does not fire the "removed" event', function() {
         expect(callback).not.toHaveBeenCalled();
+      });
+
+      it('fires the "removedFromCollection" event with removed item', function() {
+        expect(removedFromCollectionCb).toHaveBeenCalled();
+        expect(removedFromCollectionCb.argsForCall[0][1]).toEqual("e");
       });
     });
   });

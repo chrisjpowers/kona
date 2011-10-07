@@ -144,5 +144,35 @@ describe('$.fn.kona("paginator")', function() {
       expect(paginator.find(".page").length).toEqual(2);
     });
   });
+
+  describe('reacting to an added item', function() {
+    it('adds a number when a new page is introduced', function() {
+      data.add("f");
+      data.add("g");
+      expect(paginator.find(".page").length).toEqual(4);
+    });
+  });
+
+  describe('reacting to a removed item', function() {
+    describe('within offset', function() {
+      beforeEach(function() {
+        data.remove("a");
+      });
+
+      it('removes a number when a page is lost', function() {
+        expect(paginator.find(".page").length).toEqual(2);
+      });
+    });
+
+    describe('after offset', function() {
+      beforeEach(function() {
+        data.remove("e");
+      });
+
+      it('removes a number when a page is lost', function() {
+        expect(paginator.find(".page").length).toEqual(2);
+      });
+    });
+  });
 });
 
