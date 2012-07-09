@@ -1,4 +1,18 @@
 describe('$.fn.kona()', function() {
+  describe("without a method name", function() {
+    var ul, collection;
+    beforeEach(function() {
+      ul = $("<ul>");
+      collection = jasmine.createSpy("collection");
+      spyOn(kona.jQueryProxy, "bind");
+    });
+
+    it("defaults to 'bind'", function() {
+      ul.kona(collection);
+      expect(kona.jQueryProxy.bind).toHaveBeenCalledWith(collection);
+    });
+  });
+
   describe('$.fn.kona("binded")', function() {
     describe('when binding a list to a collection', function() {
       var ul, collection;
