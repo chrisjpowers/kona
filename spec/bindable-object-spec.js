@@ -69,6 +69,16 @@ describe('kona.BindableObject', function() {
       expect(callback.argsForCall[0][2]).toEqual("Joe");
       expect(callback.argsForCall[0][3]).toEqual("Chris");
     });
+
+    describe('to same value', function() {
+      beforeEach(function() {
+        obj.name("Joe"); // call second time
+      });
+
+      it("does not run callbacks a second time", function() {
+        expect(callback.callCount).toEqual(1);
+      });
+    });
   });
 
   describe('konaClass', function() {

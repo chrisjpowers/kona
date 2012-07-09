@@ -45,12 +45,12 @@ describe('$.kona("bind") with collection', function() {
     });
 
     describe('updating data', function() {
-      var obj;
+      var data, obj, list;
       beforeEach(function() {
-        obj = kona({name: "Chris", age: 30});
-        data = kona([obj]);
+        data = kona([{name: "Chris", age: 30}]);
+        obj = data.collection[0];
         list = $("<ul>").kona("bind", data, {
-          content: function(user) { return user.name; }
+          content: function(user) { return user.name(); }
         });
       });
 
